@@ -46,11 +46,11 @@ requirements = [
 setup(
     author="Constantine Karos",
     author_email="ckaros@outlook.com",
-    python_requires=">=3.7",
+    python_requires=">=3.7, <3.11",
     classifiers=[
         "Development Status :: 2 - Pre-Alpha",
         "Intended Audience :: Developers",
-        "License :: OSI Approved :: GNU General Public License v3 (GPLv3)"
+        "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
         "Natural Language :: English",
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.7",
