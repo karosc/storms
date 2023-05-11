@@ -40,7 +40,7 @@ requirements = [
     "shapely",
     "pyproj",
     "Pillow",
-    "lmoments3@git+https://github.com/OpenHydrology/lmoments3.git@7e19f97c23019ca68cbd526b8bd417c412438f1c",
+    "lmoments3>=1.0.5"
 ]
 
 setup(
