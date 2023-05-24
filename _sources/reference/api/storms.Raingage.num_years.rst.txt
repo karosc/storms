@@ -1,0 +1,6 @@
+﻿Raingage.num\_years
+===================
+
+.. currentmodule:: storms
+
+.. autoproperty:: Raingage.num_years

@@ -1,0 +1,6 @@
+﻿GlobalHourly.map
+================
+
+.. currentmodule:: storms.precip.datasets
+
+.. automethod:: GlobalHourly.map

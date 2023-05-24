@@ -1,0 +1,6 @@
+﻿Raingage.find\_intervals
+========================
+
+.. currentmodule:: storms
+
+.. automethod:: Raingage.find_intervals

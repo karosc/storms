@@ -1,0 +1,6 @@
+﻿Raingage.from\_csv
+==================
+
+.. currentmodule:: storms
+
+.. automethod:: Raingage.from_csv

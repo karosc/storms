@@ -1,0 +1,6 @@
+﻿ASOS.request\_dataframe
+=======================
+
+.. currentmodule:: storms.precip.datasets
+
+.. automethod:: ASOS.request_dataframe

@@ -1,0 +1,9 @@
+:root {
+    --table-text-color:black;
+}
+
+html[data-theme='dark'] {
+    --table-text-color:white;
+}
+
+
