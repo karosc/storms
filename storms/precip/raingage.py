@@ -2,9 +2,11 @@ from os import cpu_count
 from typing import Optional, Sequence, Union, Tuple, Dict
 from warnings import warn
 from types import MethodType
+from io import StringIO
 
 import numpy as np
 import pandas as pd
+import requests
 
 from numba import set_num_threads
 from numpy.typing import ArrayLike
@@ -1481,7 +1483,7 @@ class Raingage(object):
         )
 
 
-def get_pfds(lat: float, lon: float) -> pd.DataFrame:
+def get_pfds(lat: float, lon: float, **kwargs) -> pd.DataFrame:
     """Pull atlas 14 PFDS and return table as DataFrame
 
     Parameters
@@ -1490,6 +1492,8 @@ def get_pfds(lat: float, lon: float) -> pd.DataFrame:
         Latitude of station in decimal degrees
     lon: float
         Longitude of station in decimal degrees
+    **kwargs
+        Additional kwargs to be fed into requests.get
 
     Returns
     -------
@@ -1500,9 +1504,11 @@ def get_pfds(lat: float, lon: float) -> pd.DataFrame:
     # base url of noaa pfds
     try:
         url = f"https://hdsc.nws.noaa.gov/cgi-bin/hdsc/new/fe_text_mean.csv?lat={lat}&lon={lon}&data=depth&units=english&series=pds&"
+        response = requests.get(url,**kwargs)
+        
         # NOAA PFDS uses ASCII encoding rather than UTF
         df = pd.read_csv(
-            url, engine="python", encoding="cp1252", skiprows=13, skipfooter=2
+            StringIO(response.content.decode()), engine="python", encoding="cp1252", skiprows=13, skipfooter=2
         )
 
         # convert string duration index to hours
@@ -1520,8 +1526,9 @@ def get_pfds(lat: float, lon: float) -> pd.DataFrame:
         df.columns = df.columns.astype(float)
 
         return df
-    except:
+    except Exception as e:
         print("Error pulling PFDS")
+        print(str(e))
         return None
 
 
