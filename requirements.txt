@@ -1,0 +1,36 @@
+# package reqs
+numpy
+pandas
+numba
+scipy
+jinja2
+requests
+aiohttp
+aiohttp-retry
+tqdm
+shapely
+pyproj
+Pillow
+lmoments3>=1.0.5
+
+# dev reqs
+pip
+bump2version
+wheel
+watchdog
+tox
+coverage
+Sphinx
+twine
+pytest
+black
+mypy
+myst_parser
+matplotlib
+ipython
+numpydoc
+furo
+nbsphinx
+bokeh
+folium
+plotly
