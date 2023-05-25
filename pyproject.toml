@@ -1,0 +1,69 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "storms"
+dynamic = ["version"]
+description = "Python water data and statistics library"
+readme = "README.md"
+license = "GPL-3.0-only"
+requires-python = ">=3.7, <3.11"
+authors = [
+    { name = "Constantine Karos", email = "ckaros@outlook.com" },
+]
+keywords = [
+    "storms",
+]
+classifiers = [
+    "Development Status :: 2 - Pre-Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
+    "Natural Language :: English",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+]
+dependencies = [
+    "aiohttp",
+    "aiohttp-retry",
+    "jinja2",
+    "lmoments3>=1.0.5",
+    "numba",
+    "numpy",
+    "pandas",
+    "Pillow",
+    "pyproj",
+    "requests",
+    "scipy",
+    "shapely",
+    "tqdm",
+]
+
+[project.urls]
+Homepage = "https://github.com/karosc/storms"
+Documentation = "https://karosc/storms"
+
+[tool.hatch.version]
+path = "storms/__init__.py"
+
+[tool.hatch.build.targets.sdist]
+include = [
+    "/storms",
+    "/tests"
+]
+
+[tool.hatch.build.targets.wheel]
+include = [
+    "/storms"
+]
+
+[tool.mypy]
+allow_redefinition = true
+pretty = true
+warn_no_return = false
+ignore_missing_imports = true
+allow_untyped_globals = true
+disallow_any_decorated = false

@@ -5,6 +5,7 @@
 [![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
 [![DOCS:Pages](https://github.com/karosc/storms/actions/workflows/documentation.yaml/badge.svg)](https://www.karosc.com/storms/)
 [![Latest PyPI version](https://img.shields.io/pypi/v/storms.svg)](https://pypi.python.org/pypi/storms/)
+[![Hatch project](https://img.shields.io/badge/%F0%9F%A5%9A-Hatch-4051b5.svg)](https://github.com/pypa/hatch)
 <!-- [![PyPI Monthly Downloads](https://img.shields.io/badge/dynamic/json.svg?label=Downloads&url=https%3A%2F%2Fpypistats.org%2Fapi%2Fpackages%2Fstorms%2Frecent&query=%24.data.last_month&colorB=green&suffix=%20last%20month)](https://pypi.python.org/pypi/storms/)
  -->
 
