@@ -94,6 +94,15 @@ class _DataSource(object):
     ) -> Any:
         return NotImplementedError
 
+    def _sync_request_dataframe(
+        self,
+        start: datetime_like,
+        end: datetime_like,
+        process_data: bool,
+        pull_freq: str,
+    ) -> pd.DataFrame:
+        raise NotImplementedError
+
     def _sync_request_data_series(
         self, start: datetime_like, end: datetime_like, pull_freq: str = "AS", **kwargs
     ) -> pd.DataFrame:
@@ -132,6 +141,16 @@ class _DataSource(object):
     def _sync_request_data(
         self, start: datetime_like, end: datetime_like, session: Session
     ) -> Union[ndarray, str, List[dict]]:
+        raise NotImplementedError
+
+    async def _async_request_dataframe(
+        self,
+        start: datetime_like,
+        end: datetime_like,
+        process_data: bool,
+        pull_freq: str,
+        conn_limit: int,
+    ) -> pd.DataFrame:
         raise NotImplementedError
 
     async def _async_request_data_series(

@@ -14,6 +14,8 @@ class Network:
                 self._freq = gage.freq
             self.validate_gage(gage)
             data.append(gage.data)
+            if gage.ID is None:
+                raise Exception("All gages in a network must have an ID set")
             self.gages[gage.ID] = gage
 
         self.gage_names = list(self.gages.keys())
@@ -35,7 +37,7 @@ class Network:
         self.precip = self.data.to_numpy()
         self.datetime = self.data.index.to_numpy()
 
-    def validate_gage(self, gage: Raingage) -> NoReturn:
+    def validate_gage(self, gage: Raingage) -> None:
         if not isinstance(gage, Raingage):
             raise Exception("All network objects must be Raingages")
         if gage.ID is None:
@@ -79,7 +81,7 @@ class Network:
 
     def find_events(
         self, inter_event_period: float = 6, threshold_depth: float = 0.25
-    ) -> NoReturn:
+    ) -> None:
         self._events, self._event_col = eventify(
             self.precip,
             self.datetime,

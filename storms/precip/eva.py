@@ -344,7 +344,11 @@ class EVModel:
         return self.model.cdf(x, **self.paras)
 
 
-def plotting_position(M: int, nyrs: int, A: float = 0.4) -> float:
+def plotting_position(
+    M: Union[int, np.int64],
+    nyrs: Union[int, np.int64],
+    A: Union[float, np.float64] = 0.4,
+) -> float | np.float64:
     """
     Empirical  return  period  (plotting  position)  is  calculated  by  the  general  equation
     first proposed by Gringorten (1963) and analyzed by Cunnane (1978). From `SWMM4 Manual`_ pg 299.

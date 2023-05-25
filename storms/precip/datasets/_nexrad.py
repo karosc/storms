@@ -267,8 +267,8 @@ class NEXRAD(_DataSource):
         start: datetime_like,
         end: datetime_like,
         process_data: bool = True,
-        pull_freq="5T",
-        conn_limit=30,
+        pull_freq: str = "5T",
+        conn_limit: int = 30,
     ) -> Union[pd.DataFrame, np.ndarray]:
         """
         Request nexrad data DataFrame with asynchronous requests to Iowa Mesonet.
@@ -367,7 +367,8 @@ class NEXRAD(_DataSource):
                 continue
             except:
                 raise Exception(f"error pulling {url}, retrying...")
-        print(f"Couldn't get data from {start}")
+
+        raise Exception(f"error pulling {url} after 5 retries")
 
     def _process_data(self, data: np.ndarray, index: np.ndarray) -> np.ndarray:
         """Process raw nexrad rgb values into reflectivity values using NOAA color maps

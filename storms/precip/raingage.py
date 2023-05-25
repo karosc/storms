@@ -28,6 +28,7 @@ from tqdm.auto import tqdm
 __HERE__ = pathlib.Path(__file__).parent
 _noaa_ca_cert_path = str((__HERE__ / "hdsc-nws-noaa-gov-chain.pem").absolute())
 
+
 def dbz_to_depth(
     dbz: np.ndarray, a: float = 200, b: float = 1.6, interval: float = 300, **kwargs
 ) -> np.ndarray:
@@ -66,7 +67,7 @@ class Raingage(object):
     def __init__(
         self,
         data: pd.Series,
-        freq: str = None,
+        freq: Optional[str] = None,
         latlon: Optional[Tuple[float, float]] = None,
         meta: Optional[dict] = {},
         ID: Optional[str] = None,
@@ -129,7 +130,8 @@ class Raingage(object):
         """DataFrame of sub-events found with the find_intervals method."""
 
         self._dbz_data: Dict[
-            Tuple[pd.TimeStamp, pd.TimeStamp, Union[float, int]], pd.Series
+            Tuple[pd.TimeStamp, pd.TimeStamp, float, Union[str, pd.DateOffset]],
+            pd.Series,
         ] = {}
 
     @classmethod
@@ -670,7 +672,7 @@ class Raingage(object):
         out_freq: pd.DateOffset,
         num_bins: int,
         inplace: bool,
-        precision: float = 2,
+        precision: int = 2,
         scale_factor: float = 0,
         **kwargs,
     ):
@@ -685,8 +687,8 @@ class Raingage(object):
             Number of bins to split data into every time step.
         inplace: bool
             Switch to return new Raingage object or alter current, by default True.
-        precision: float
-            The precision of output rainfall timeseries, by default 2 for hundreths of an inche.
+        precision: int
+            The precision of output rainfall timeseries, by default 2 for hundreths of an inch.
         scale_factor: float
             Spiking factor used to randomly add higher peaks to output timeseries, by default 0.
 
@@ -1246,13 +1248,12 @@ class Raingage(object):
             start = pd.to_datetime(start)
             end = pd.to_datetime(end)
 
-        key = (start, end, averaging_distance, freq)
+        pull_freq = freq if freq is not None else self.freq
+        key = (start, end, averaging_distance, pull_freq)
 
         if self._dbz_data.get(key) is None:
             if nex is None:
                 nex = NEXRAD(*self.latlon, averaging_distance)  # type: ignore
-
-            pull_freq = freq if freq is not None else self.freq
 
             data = nex.request_dataframe(
                 start, end, aSync=True, pull_freq=pull_freq, progress=progress
@@ -1486,7 +1487,9 @@ class Raingage(object):
         )
 
 
-def get_pfds(lat: float, lon: float, verify = _noaa_ca_cert_path , **kwargs) -> pd.DataFrame:
+def get_pfds(
+    lat: float, lon: float, verify=_noaa_ca_cert_path, **kwargs
+) -> pd.DataFrame:
     """Pull atlas 14 PFDS and return table as DataFrame
 
     Parameters
@@ -1495,7 +1498,7 @@ def get_pfds(lat: float, lon: float, verify = _noaa_ca_cert_path , **kwargs) -> 
         Latitude of station in decimal degrees
     lon: float
         Longitude of station in decimal degrees
-    verify: 
+    verify:
         verify argument to feed into requests.get
     **kwargs
         Additional kwargs to be fed into requests.get
@@ -1509,11 +1512,15 @@ def get_pfds(lat: float, lon: float, verify = _noaa_ca_cert_path , **kwargs) -> 
     # base url of noaa pfds
     try:
         url = f"https://hdsc.nws.noaa.gov/cgi-bin/hdsc/new/fe_text_mean.csv?lat={lat}&lon={lon}&data=depth&units=english&series=pds&"
-        response = requests.get(url,verify = verify, **kwargs)
-        
+        response = requests.get(url, verify=verify, **kwargs)
+
         # NOAA PFDS uses ASCII encoding rather than UTF
         df = pd.read_csv(
-            StringIO(response.content.decode()), engine="python", encoding="cp1252", skiprows=13, skipfooter=2
+            StringIO(response.content.decode()),
+            engine="python",
+            encoding="cp1252",
+            skiprows=13,
+            skipfooter=2,
         )
 
         # convert string duration index to hours

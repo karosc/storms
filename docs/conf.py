@@ -174,7 +174,7 @@ html_css_files = [
 ]
 
 
-#https://github.com/spatialaudio/nbsphinx/issues/128
+# https://github.com/spatialaudio/nbsphinx/issues/128
 html_js_files = [
     "js/MathJax.js",
     "js/require.min.js",
@@ -259,7 +259,7 @@ rst_prolog = """
 """
 
 # mathjax_path = "js/MathJax.js"
-# nbsphinx_requirejs_path = "https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js" 
+# nbsphinx_requirejs_path = "https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js"
 # nbsphinx_requirejs_options = {
 #     "src": "https://cdnjs.cloudflare.com/ajax/libs/require.js/2.1.10/require.min.js",
 #     "integrity": "sha512-VCK7oF67GXNc+J7zsu5o57jtxhLA75nSMHGaq8Q8TCOxDj4nMDw5dhQZvm9Cd9RN+3zgcodqbKcRc9gyPP8a2w==",

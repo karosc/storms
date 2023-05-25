@@ -341,8 +341,8 @@ class ASOS(_DataSource):
         start: datetime_like,
         end: datetime_like,
         process_data: bool = True,
-        pull_freq="AS",
-        conn_limit=5,
+        pull_freq: str = "AS",
+        conn_limit: int = 5,
     ) -> pd.DataFrame:
         """
         Request precipitation DataFrame with asynchronous annual requests to Iowa Mesonet
