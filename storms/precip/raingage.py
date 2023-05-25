@@ -3,6 +3,7 @@ from typing import Optional, Sequence, Union, Tuple, Dict
 from warnings import warn
 from types import MethodType
 from io import StringIO
+import pathlib
 
 import numpy as np
 import pandas as pd
@@ -24,6 +25,8 @@ from storms._utils import datetime_like
 from storms.precip._dashboard import rg_2_dash
 from tqdm.auto import tqdm
 
+__HERE__ = pathlib.Path(__file__).parent
+_noaa_ca_cert_path = str((__HERE__ / "hdsc-nws-noaa-gov-chain.pem").absolute())
 
 def dbz_to_depth(
     dbz: np.ndarray, a: float = 200, b: float = 1.6, interval: float = 300, **kwargs
@@ -1483,7 +1486,7 @@ class Raingage(object):
         )
 
 
-def get_pfds(lat: float, lon: float, **kwargs) -> pd.DataFrame:
+def get_pfds(lat: float, lon: float, verify = _noaa_ca_cert_path , **kwargs) -> pd.DataFrame:
     """Pull atlas 14 PFDS and return table as DataFrame
 
     Parameters
@@ -1492,6 +1495,8 @@ def get_pfds(lat: float, lon: float, **kwargs) -> pd.DataFrame:
         Latitude of station in decimal degrees
     lon: float
         Longitude of station in decimal degrees
+    verify: 
+        verify argument to feed into requests.get
     **kwargs
         Additional kwargs to be fed into requests.get
 
@@ -1504,7 +1509,7 @@ def get_pfds(lat: float, lon: float, **kwargs) -> pd.DataFrame:
     # base url of noaa pfds
     try:
         url = f"https://hdsc.nws.noaa.gov/cgi-bin/hdsc/new/fe_text_mean.csv?lat={lat}&lon={lon}&data=depth&units=english&series=pds&"
-        response = requests.get(url,**kwargs)
+        response = requests.get(url,verify = verify, **kwargs)
         
         # NOAA PFDS uses ASCII encoding rather than UTF
         df = pd.read_csv(
