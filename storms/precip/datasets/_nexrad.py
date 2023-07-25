@@ -12,7 +12,7 @@ from shapely.geometry import Point
 from shapely.ops import transform
 from pyproj import Transformer
 
-from PIL import Image
+from PIL import Image,UnidentifiedImageError
 import numpy as np
 from storms._utils import datetime_like
 
@@ -65,7 +65,11 @@ class NEXRAD(_DataSource):
         -------
 
         """
-        return n0rMAP[transformRGB(rgb)]
+        transformed = transformRGB(rgb)
+        transformed[~np.isnan(transformed).any(axis=1)] = n0rMAP[
+            transformed[~np.isnan(transformed).any(axis=1)].astype(int)
+            ]
+        return transformed
 
     @staticmethod
     def _NOQtoDBZ(rgb: np.ndarray) -> np.ndarray:
@@ -80,7 +84,11 @@ class NEXRAD(_DataSource):
         -------
 
         """
-        return n0qMAP[transformRGB(rgb)]
+        transformed = transformRGB(rgb)
+        transformed[~np.isnan(transformed).any(axis=1)] = n0qMAP[
+            transformed[~np.isnan(transformed).any(axis=1)].astype(int)
+            ]
+        return transformed
 
     @staticmethod
     def _get_bbox(lat: float, lon: float, buffer: float) -> Tuple[float, ...]:
@@ -255,11 +263,15 @@ class NEXRAD(_DataSource):
 
         """
         url = self._request_url(start)
-        with session.get(url) as response:
-            b = BytesIO(response.content)
-            img = Image.open(b)
-            arr = np.array(img.getdata())
-            return arr
+        try:
+            with session.get(url) as response:
+                b = BytesIO(response.content)
+                img = Image.open(b)
+                arr = np.array(img.getdata())
+        except UnidentifiedImageError as e:
+            print(f'error pulling data for {start.isoformat()}. Filling with nan')
+            arr = np.full((self.resolution**2,4),np.nan)
+        return arr
 
     # async functions
     async def _async_request_dataframe(
@@ -357,7 +369,6 @@ class NEXRAD(_DataSource):
                     b = BytesIO(await response.read())
                     img = Image.open(b)
                     arr = np.array(img.getdata())
-                    return arr
 
             except aiohttp.ClientConnectionError:
                 # print(
@@ -365,8 +376,14 @@ class NEXRAD(_DataSource):
                 # )
                 error_counter += 1
                 continue
-            except:
+            except UnidentifiedImageError as e:
+                print(f'error pulling data for {start.isoformat()}. Filling with nan')
+                arr = np.full((self.resolution**2,4),np.nan)
+            except Exception:
                 raise Exception(f"error pulling {url}, retrying...")
+            
+            return arr
+
 
         raise Exception(f"error pulling {url} after 5 retries")
 
