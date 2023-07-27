@@ -2,7 +2,7 @@ import ftplib
 from io import BytesIO, StringIO
 from typing import List, Sequence, Union
 
-from aiohttp_retry import RetryClient
+from aiohttp_retry import RetryClient,RetryOptionsBase,ExponentialRetry
 import pandas as pd
 import requests
 from pytz import FixedOffset  # type: ignore
@@ -464,6 +464,8 @@ class GlobalHourly(_DataSource):
         process_data: bool = True,
         pull_freq: str = "AS",
         conn_limit: int = 30,
+        retry_options: RetryOptionsBase = ExponentialRetry(attempts=5, start_timeout=0.1)
+
     ) -> pd.DataFrame:
         """
         Request precipitation DataFrame with asynchronous annual requests to NOAA V1 API.
@@ -493,6 +495,9 @@ class GlobalHourly(_DataSource):
         conn_limit: int
             Connection limit for aiohttp session, defaults to 30
 
+        retry_options: RetryOptionsBase
+            Retry options to pass to aiohttp_retry client
+            
         Returns
         -------
         pd.DataFrame
@@ -500,7 +505,7 @@ class GlobalHourly(_DataSource):
 
         """
 
-        data = await self._async_request_data_series(start, end, pull_freq, conn_limit)
+        data = await self._async_request_data_series(start, end, pull_freq, conn_limit, retry_options,)
         data = pd.DataFrame(flatten(data))
 
         if process_data:

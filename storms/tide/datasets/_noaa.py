@@ -1,4 +1,4 @@
-from aiohttp_retry import RetryClient
+from aiohttp_retry import RetryClient,RetryOptionsBase,ExponentialRetry
 import pandas as pd
 from storms._datasource import _DataSource, flatten
 from urllib.parse import urlencode
@@ -263,6 +263,7 @@ class NOAAtides(_DataSource):
         process_data: bool = True,
         pull_freq: str = "AS",
         conn_limit: int = 30,
+        retry_options: RetryOptionsBase = ExponentialRetry(attempts=5, start_timeout=0.1),
         datatype: str = "water_level",
         **kwargs,
     ) -> pd.DataFrame:
@@ -287,7 +288,7 @@ class NOAAtides(_DataSource):
         """
 
         data = await self._async_request_data_series(
-            start, end, pull_freq, conn_limit, datatype=datatype, **kwargs
+            start, end, pull_freq, conn_limit, retry_options, datatype=datatype, **kwargs
         )
         data = pd.DataFrame(flatten(data))
 

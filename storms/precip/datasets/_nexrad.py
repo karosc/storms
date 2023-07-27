@@ -2,7 +2,7 @@ from io import BytesIO
 from typing import Tuple, Union
 from math import ceil
 import aiohttp
-from aiohttp_retry import RetryClient
+from aiohttp_retry import RetryClient,RetryOptionsBase,ExponentialRetry
 import pandas as pd
 import requests
 from storms._datasource import _DataSource
@@ -281,6 +281,7 @@ class NEXRAD(_DataSource):
         process_data: bool = True,
         pull_freq: str = "5T",
         conn_limit: int = 30,
+        retry_options: RetryOptionsBase = ExponentialRetry(attempts=5, start_timeout=0.1)
     ) -> Union[pd.DataFrame, np.ndarray]:
         """
         Request nexrad data DataFrame with asynchronous requests to Iowa Mesonet.
@@ -313,6 +314,9 @@ class NEXRAD(_DataSource):
         conn_limit: int
             Connection limit for aiohttp session, defaults to 30
 
+        retry_options: RetryOptionsBase
+            Retry options to pass to aiohttp_retry client
+
         Returns
         -------
         pd.DataFrame
@@ -322,7 +326,7 @@ class NEXRAD(_DataSource):
 
         reqEnd = pd.to_datetime(end) + pd.Timedelta(pull_freq)
         data = np.array(
-            await self._async_request_data_series(start, reqEnd, pull_freq, conn_limit)
+            await self._async_request_data_series(start, reqEnd, pull_freq, conn_limit, retry_options)
         )
         index = pd.date_range(start, end, freq=pull_freq)
         if process_data:
@@ -379,8 +383,11 @@ class NEXRAD(_DataSource):
             except UnidentifiedImageError as e:
                 print(f'error pulling data for {start.isoformat()}. Filling with nan')
                 arr = np.full((self.resolution**2,4),np.nan)
-            except Exception:
-                raise Exception(f"error pulling {url}, retrying...")
+            except Exception as e:
+                print(e)
+                print(f"error pulling {url}, retrying...")
+                error_counter += 1
+                continue
             
             return arr
 

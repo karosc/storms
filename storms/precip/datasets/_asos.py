@@ -1,7 +1,7 @@
 from io import StringIO
 from typing import Sequence
 from urllib.parse import urlencode
-from aiohttp_retry import RetryClient
+from aiohttp_retry import RetryClient,RetryOptionsBase,ExponentialRetry
 import pandas as pd
 import requests
 from warnings import warn
@@ -343,6 +343,7 @@ class ASOS(_DataSource):
         process_data: bool = True,
         pull_freq: str = "AS",
         conn_limit: int = 5,
+        retry_options: RetryOptionsBase = ExponentialRetry(attempts=5, start_timeout=0.1)
     ) -> pd.DataFrame:
         """
         Request precipitation DataFrame with asynchronous annual requests to Iowa Mesonet
@@ -370,6 +371,9 @@ class ASOS(_DataSource):
         conn_limit: int
             Connection limit for aiohttp session, defaults to 5
 
+        retry_options: RetryOptionsBase
+            Retry options to pass to aiohttp_retry client
+
         Returns
         -------
         pd.DataFrame
@@ -380,7 +384,7 @@ class ASOS(_DataSource):
         # I think the mesonet limits to 5 connections over 300s or 300ms?
         # setting conn_limit to 5 for now, seems to work okay
         # https://github.com/akrherz/iem/blob/main/include/throttle.php
-        data = await self._async_request_data_series(start, end, pull_freq, conn_limit)
+        data = await self._async_request_data_series(start, end, pull_freq, conn_limit, retry_options)
         datastr = "\n".join(data)
         with StringIO(datastr) as s:
             df = pd.read_csv(

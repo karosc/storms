@@ -5,7 +5,7 @@ from types import SimpleNamespace
 from typing import Any, List, Sequence, Union
 
 import pandas as pd
-from aiohttp import ClientSession, TCPConnector, TraceRequestStartParams
+from aiohttp import ClientSession, TCPConnector, TraceRequestStartParams, TraceConfig
 from aiohttp_retry import ExponentialRetry, RetryClient
 from numpy import ndarray
 from requests import Session
@@ -17,7 +17,6 @@ from tqdm.autonotebook import tqdm
 handler = logging.StreamHandler(sys.stdout)
 logging.basicConfig(handlers=[handler])
 logger = logging.getLogger(__name__)
-retry_options = ExponentialRetry(attempts=5, start_timeout=0.1)
 
 sync_retries = Retry(total=5, backoff_factor=0.1, status_forcelist=[502, 503, 504])
 
@@ -26,11 +25,12 @@ async def on_request_start(
     session: ClientSession,
     trace_config_ctx: SimpleNamespace,
     params: TraceRequestStartParams,
+    # retry_options: ExponentialRetry
 ) -> None:
     current_attempt = trace_config_ctx.trace_request_ctx["current_attempt"]
     print(f"attempt {current_attempt -1}")
-    if retry_options.attempts <= current_attempt:
-        logger.warning("Wow! We are in last attempt")
+    # if retry_options.attempts <= current_attempt:
+    #     logger.warning("Wow! We are in last attempt")
 
 
 def flatten(t):
@@ -159,6 +159,9 @@ class _DataSource(object):
         end: datetime_like,
         pull_freq: str = "AS",
         conn_limit: int = 30,
+        retry_options: ExponentialRetry = ExponentialRetry(
+            attempts=5, start_timeout=0.1
+        ),
         **kwargs,
     ) -> pd.DataFrame:
         # convert string inputs to datetime-like
