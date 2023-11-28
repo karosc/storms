@@ -268,7 +268,7 @@ class NEXRAD(_DataSource):
                 b = BytesIO(response.content)
                 img = Image.open(b)
                 arr = np.array(img.getdata())
-        except UnidentifiedImageError as e:
+        except UnidentifiedImageError:
             print(f'error pulling data for {start.isoformat()}. Filling with nan')
             arr = np.full((self.resolution**2,4),np.nan)
         return arr
@@ -380,7 +380,7 @@ class NEXRAD(_DataSource):
                 # )
                 error_counter += 1
                 continue
-            except UnidentifiedImageError as e:
+            except UnidentifiedImageError:
                 print(f'error pulling data for {start.isoformat()}. Filling with nan')
                 arr = np.full((self.resolution**2,4),np.nan)
             except Exception as e:

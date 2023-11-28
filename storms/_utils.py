@@ -18,7 +18,8 @@ def timed_lru_cache(
 
     Extension of functools lru_cache with a timeout
 
-    Parameters:
+    Parameters
+    ----------
     seconds (int): Timeout in seconds to clear the WHOLE cache, default = 10 minutes
     maxsize (int): Maximum Size of the Cache
     typed (bool): Same value of different type will be a different entry
