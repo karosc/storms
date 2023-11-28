@@ -13,7 +13,7 @@ minute_unit = np.timedelta64(1, "m")
 
 @overload(np.nan_to_num)
 def nan_to_num(x, copy=True, nan=0.0, posinf=None, neginf=None):
-    """numba implementation of nan_to_num
+    """Numba implementation of nan_to_num
     https://github.com/numba/numba/issues/6857
     """
     if isinstance(x, nbArray):
@@ -48,7 +48,7 @@ def nan_to_num(x, copy=True, nan=0.0, posinf=None, neginf=None):
 
 @njit(cache=True)
 def _is_not_in(master: np.ndarray, search: np.ndarray):
-    """numba function for determining if certain values are in an array"""
+    """Numba function for determining if certain values are in an array"""
     return ~(
         np.searchsorted(master, search, side="right")
         != np.searchsorted(master, search, side="left")
@@ -78,7 +78,7 @@ def _vstar(Vt, tstar):
 
 @njit(cache=True)
 def _tstar(Vt):
-    """time parameter in ormsbee algorithm
+    """Time parameter in ormsbee algorithm
 
     Ormsbee eqs 20 - 23
     """

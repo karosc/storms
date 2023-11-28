@@ -483,7 +483,7 @@ class Raingage(object):
 
     @property
     def ts_hours(self) -> float:
-        """return the timeseries timestep in hours.
+        """Return the timeseries timestep in hours.
 
         Returns
         -------
@@ -504,7 +504,7 @@ class Raingage(object):
 
         """
         return round(
-            (self.data.index.max() - self.data.index.min()) / np.timedelta64(1, "Y")
+            (self.data.index.max() - self.data.index.min()) / np.timedelta64(365, "D")
         )
 
     def aggregate(self, freq: str, inplace: bool = True):
