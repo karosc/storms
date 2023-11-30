@@ -93,7 +93,7 @@ class EVA:
 
         """
         return round(
-            (self.ser.index.max() - self.ser.index.min()) / np.timedelta64(1, "Y")
+            (self.ser.index.max() - self.ser.index.min()) / np.timedelta64(365, "D")
         )
 
     def ARI(self, d: float) -> Union[float, np.ndarray]:
