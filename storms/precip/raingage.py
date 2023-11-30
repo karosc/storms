@@ -745,6 +745,34 @@ class Raingage(object):
                 dep, self.pfds.loc[duration].to_numpy(), self.pfds.columns.to_numpy()
             )
 
+    def get_noaa_depth(self, ari: float, duration: float) -> float:
+        """Pull NOAA Depth from NOAA PFDS assuming lat lon were provided during instantiation.
+
+        Parameters
+        ----------
+        dep: float
+            Rainfall depth in inches.
+        duration: float
+            Duration in hours.
+
+        Returns
+        -------
+        float
+            ARI in years.
+
+        Raises
+        ------
+        ValueError
+            If duration not in PFDS table.
+        """
+
+        if duration not in self.pfds.index:
+            raise ValueError(f"{duration}-hours not in PFDS table")
+        else:
+            return _interp(
+                ari, self.pfds.columns.to_numpy(), self.pfds.loc[duration].to_numpy()
+            )
+
     @property
     def events(self) -> pd.DataFrame:
         """DataFrame of largest events. Depends on find_events already being run.
