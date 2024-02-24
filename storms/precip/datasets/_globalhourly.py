@@ -387,7 +387,7 @@ class GlobalHourly(_DataSource):
         start: datetime_like,
         end: datetime_like,
         process_data: bool = True,
-        pull_freq: str = "AS",
+        pull_freq: str = "YS",
     ) -> pd.DataFrame:
         """Request precipitation DataFrame with synchronous annual requests to NOAA V1 API.
         For potential faster data pulls for longer time periods, use the
@@ -462,7 +462,7 @@ class GlobalHourly(_DataSource):
         start: datetime_like,
         end: datetime_like,
         process_data: bool = True,
-        pull_freq: str = "AS",
+        pull_freq: str = "YS",
         conn_limit: int = 30,
         retry_options: RetryOptionsBase = ExponentialRetry(attempts=5, start_timeout=0.1)
 

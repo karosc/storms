@@ -261,7 +261,7 @@ class NOAAtides(_DataSource):
         start: datetime_like,
         end: datetime_like,
         process_data: bool = True,
-        pull_freq: str = "AS",
+        pull_freq: str = "YS",
         conn_limit: int = 30,
         retry_options: RetryOptionsBase = ExponentialRetry(attempts=5, start_timeout=0.1),
         datatype: str = "water_level",

@@ -104,7 +104,7 @@ class _DataSource(object):
         raise NotImplementedError
 
     def _sync_request_data_series(
-        self, start: datetime_like, end: datetime_like, pull_freq: str = "AS", **kwargs
+        self, start: datetime_like, end: datetime_like, pull_freq: str = "YS", **kwargs
     ) -> pd.DataFrame:
         # convert string inputs to datetime-like
         dStart = pd.to_datetime(start)
@@ -157,7 +157,7 @@ class _DataSource(object):
         self,
         start: datetime_like,
         end: datetime_like,
-        pull_freq: str = "AS",
+        pull_freq: str = "YS",
         conn_limit: int = 30,
         retry_options: ExponentialRetry = ExponentialRetry(
             attempts=5, start_timeout=0.1
