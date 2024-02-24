@@ -615,7 +615,7 @@ class GlobalHourly(_DataSource):
         ]
 
         # round all data to hourly and keep last hourly measurement only (avoid dups)
-        data["Hourly"] = data["LocalTime"].dt.floor("H")
+        data["Hourly"] = data["LocalTime"].dt.floor("h")
         data = data.sort_values("Hourly", ascending=True).drop_duplicates(
             subset=["Hourly"], keep="last"
         )

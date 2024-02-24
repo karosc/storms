@@ -1,12 +1,15 @@
 from io import StringIO
 from typing import Sequence
 from urllib.parse import urlencode
-from aiohttp_retry import RetryClient,RetryOptionsBase,ExponentialRetry
+from aiohttp_retry import RetryClient, RetryOptionsBase, ExponentialRetry
 import pandas as pd
 import requests
 from warnings import warn
 from storms._datasource import _DataSource
 from storms._utils import datetime_like
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 class ASOS(_DataSource):
@@ -234,8 +237,8 @@ class ASOS(_DataSource):
         ed = pd.to_datetime(end)  # .tz_localize(self.TZ)
 
         if self.utc_offset is not None:
-            st -= pd.Timedelta(f"{self.utc_offset}H")
-            ed -= pd.Timedelta(f"{self.utc_offset}H")
+            st -= pd.Timedelta(f"{self.utc_offset}h")
+            ed -= pd.Timedelta(f"{self.utc_offset}h")
 
         params = (
             ("day1", st.strftime("%d")),
@@ -343,7 +346,9 @@ class ASOS(_DataSource):
         process_data: bool = True,
         pull_freq: str = "AS",
         conn_limit: int = 5,
-        retry_options: RetryOptionsBase = ExponentialRetry(attempts=5, start_timeout=0.1)
+        retry_options: RetryOptionsBase = ExponentialRetry(
+            attempts=5, start_timeout=0.1
+        ),
     ) -> pd.DataFrame:
         """
         Request precipitation DataFrame with asynchronous annual requests to Iowa Mesonet
@@ -384,7 +389,9 @@ class ASOS(_DataSource):
         # I think the mesonet limits to 5 connections over 300s or 300ms?
         # setting conn_limit to 5 for now, seems to work okay
         # https://github.com/akrherz/iem/blob/main/include/throttle.php
-        data = await self._async_request_data_series(start, end, pull_freq, conn_limit, retry_options)
+        data = await self._async_request_data_series(
+            start, end, pull_freq, conn_limit, retry_options
+        )
         datastr = "\n".join(data)
         with StringIO(datastr) as s:
             df = pd.read_csv(
@@ -458,8 +465,21 @@ class ASOS(_DataSource):
 
         df.loc[:, "dtUTC"] = pd.to_datetime(df.dtUTC)
 
+        # sometimes missing flags show up in value column
+        missing_idx = df.loc[df.precip == "M"].index
+        df.loc[missing_idx, "precip"] = 0
+        df.loc[missing_idx, "ptype"] = "M"
+        num_missing = int((df.ptype=="M").sum())
+        if len(num_missing) > 0:
+            logger.warning(
+                f"{num_missing} missing values ({num_missing/len(df)*100:.2f}%)"
+            )
+
         # drop zeros and NP values
-        df = df.loc[(df.ptype != "NP") & (df.precip > 0)]
+        no_precip = (df.ptype == "NP") & (df.precip > 0)
+        precip = (df.ptype != "NP") & (df.precip > 0)
+        logger.info(f'Dropping {df.loc[no_precip,'precip'].sum()} inches of NP values')
+        df = df.loc[precip]
 
         if self.utc_offset is None:
             warn(
@@ -469,5 +489,5 @@ class ASOS(_DataSource):
 
         else:
             df = df.reindex(["dtLocal", "dtUTC", "precip", "ptype"], axis=1)
-            df.loc[:, "dtLocal"] = df.dtUTC + pd.Timedelta(f"{self.utc_offset}H")
+            df.loc[:, "dtLocal"] = df.dtUTC + pd.Timedelta(f"{self.utc_offset}h")
             return df

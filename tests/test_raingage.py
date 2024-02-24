@@ -22,7 +22,7 @@ def BostonRaingage():
     print("loading data")
     start = time()
     gage = Raingage.from_ff(
-        os.path.join(dir, "data/Logan.1h"), freq="H", latlon=(42.3606, -71.0097)
+        os.path.join(dir, "data/Logan.1h"), freq="h", latlon=(42.3606, -71.0097)
     )
     gage.find_events()
     gage.find_intervals(periods=[24], constraints=[1])

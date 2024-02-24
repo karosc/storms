@@ -184,7 +184,7 @@ class NEXRAD(_DataSource):
         if dt < pd.Timestamp("1/1/1995"):
             raise Exception("No NEXRAD data prior to 1/1/1995")
 
-        UTC = dt - pd.Timedelta(self.gmt_offset, unit="H")
+        UTC = dt - pd.Timedelta(self.gmt_offset, unit="h")
 
         if UTC < pd.Timestamp("2011-03-01"):
             product = "n0r"

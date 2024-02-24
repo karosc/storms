@@ -200,7 +200,7 @@ class Raingage(object):
         data = df.set_index("Hourly")["Inches"]
         return cls(
             data.loc[data > 0],
-            freq="1H",
+            freq="1h",
             latlon=(gage.meta["LAT"], gage.meta["LON"]),
             meta=gage.meta,
             ID=ID,
@@ -1270,7 +1270,7 @@ class Raingage(object):
             # end = self.datetime[evt.event_end_index - 1]
             end = (
                 evt.start_date
-                + pd.to_timedelta(evt.hours_duration - self.ts_hours, "H")
+                + pd.to_timedelta(evt.hours_duration - self.ts_hours, "h")
             ).round("T")
         else:
             start = pd.to_datetime(start)
@@ -1389,7 +1389,7 @@ class Raingage(object):
             start = row.start_date
             end = (
                 row.start_date
-                + pd.to_timedelta(row.hours_duration - self.ts_hours, "H")
+                + pd.to_timedelta(row.hours_duration - self.ts_hours, "h")
             ).round("T")
 
             depth = self._storm_dbz_inches(start, end, nex=nex, **kwargs)
@@ -1516,7 +1516,7 @@ class Raingage(object):
 
 
 def get_pfds(
-    lat: float, lon: float, verify=_noaa_ca_cert_path, **kwargs
+    lat: float, lon: float, **kwargs
 ) -> pd.DataFrame:
     """Pull atlas 14 PFDS and return table as DataFrame
 
@@ -1540,7 +1540,7 @@ def get_pfds(
     # base url of noaa pfds
     try:
         url = f"https://hdsc.nws.noaa.gov/cgi-bin/hdsc/new/fe_text_mean.csv?lat={lat}&lon={lon}&data=depth&units=english&series=pds&"
-        response = requests.get(url, verify=verify, **kwargs)
+        response = requests.get(url, **kwargs)
 
         # NOAA PFDS uses ASCII encoding rather than UTF
         df = pd.read_csv(

@@ -132,7 +132,7 @@ class Network:
             # calculate end date from durations
             endDate = (
                 gage_obj._events.start_date
-                + pd.to_timedelta(gage_obj._events.hours_duration - self.ts_hours, "H")
+                + pd.to_timedelta(gage_obj._events.hours_duration - self.ts_hours, "h")
             ).round("T")
 
             # find endIndex in gage data
