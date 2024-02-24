@@ -469,17 +469,18 @@ class ASOS(_DataSource):
         missing_idx = df.loc[df.precip == "M"].index
         df.loc[missing_idx, "precip"] = 0
         df.loc[missing_idx, "ptype"] = "M"
-        num_missing = int((df.ptype=="M").sum())
-        if len(num_missing) > 0:
+        df["precip"] = df["precip"].astype(float)
+        num_missing = int((df.ptype == "M").sum())
+        if num_missing > 0:
             logger.warning(
-                f"{num_missing} missing values ({num_missing/len(df)*100:.2f}%)"
+                f"{num_missing} missing values ({num_missing/len(df)*100:.2f}%) from gauge {self.faa}"
             )
 
         # drop zeros and NP values
         no_precip = (df.ptype == "NP") & (df.precip > 0)
         precip = (df.ptype != "NP") & (df.precip > 0)
         logger.info(f'Dropping {df.loc[no_precip,'precip'].sum()} inches of NP values')
-        df = df.loc[precip]
+        df = df.drop(df.loc[~precip].index)
 
         if self.utc_offset is None:
             warn(
@@ -488,6 +489,6 @@ class ASOS(_DataSource):
             return df.reindex(["dtUTC", "precip", "ptype"], axis=1)
 
         else:
-            df = df.reindex(["dtLocal", "dtUTC", "precip", "ptype"], axis=1)
-            df.loc[:, "dtLocal"] = df.dtUTC + pd.Timedelta(f"{self.utc_offset}h")
-            return df
+            df["dtLocal"] = df["dtUTC"] + pd.Timedelta(f"{self.utc_offset}h")
+            return df.reindex(["dtLocal", "dtUTC", "precip", "ptype"], axis=1)
+
