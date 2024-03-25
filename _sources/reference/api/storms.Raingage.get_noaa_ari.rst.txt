@@ -1,0 +1,6 @@
+﻿Raingage.get\_noaa\_ari
+=======================
+
+.. currentmodule:: storms
+
+.. automethod:: Raingage.get_noaa_ari

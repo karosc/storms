@@ -1,0 +1,6 @@
+﻿Raingage.disaggregate
+=====================
+
+.. currentmodule:: storms
+
+.. automethod:: Raingage.disaggregate

@@ -1,0 +1,6 @@
+﻿Raingage.events
+===============
+
+.. currentmodule:: storms
+
+.. autoproperty:: Raingage.events

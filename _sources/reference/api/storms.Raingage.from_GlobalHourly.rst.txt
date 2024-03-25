@@ -1,0 +1,6 @@
+﻿Raingage.from\_GlobalHourly
+===========================
+
+.. currentmodule:: storms
+
+.. automethod:: Raingage.from_GlobalHourly

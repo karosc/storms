@@ -1,0 +1,6 @@
+﻿Raingage.ts\_hours
+==================
+
+.. currentmodule:: storms
+
+.. autoproperty:: Raingage.ts_hours

@@ -1,0 +1,6 @@
+﻿Raingage.from\_asos
+===================
+
+.. currentmodule:: storms
+
+.. automethod:: Raingage.from_asos

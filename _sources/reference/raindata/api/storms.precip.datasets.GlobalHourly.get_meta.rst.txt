@@ -1,0 +1,6 @@
+﻿GlobalHourly.get\_meta
+======================
+
+.. currentmodule:: storms.precip.datasets
+
+.. automethod:: GlobalHourly.get_meta

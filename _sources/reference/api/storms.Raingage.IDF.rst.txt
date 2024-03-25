@@ -1,0 +1,6 @@
+﻿Raingage.IDF
+============
+
+.. currentmodule:: storms
+
+.. automethod:: Raingage.IDF

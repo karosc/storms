@@ -1,0 +1,6 @@
+﻿Raingage.find\_ari
+==================
+
+.. currentmodule:: storms
+
+.. automethod:: Raingage.find_ari

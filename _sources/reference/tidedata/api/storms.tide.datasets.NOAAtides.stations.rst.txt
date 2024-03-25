@@ -1,0 +1,6 @@
+﻿NOAAtides.stations
+==================
+
+.. currentmodule:: storms.tide.datasets
+
+.. automethod:: NOAAtides.stations

@@ -1,0 +1,6 @@
+﻿ASOS.map
+========
+
+.. currentmodule:: storms.precip.datasets
+
+.. automethod:: ASOS.map

@@ -1,0 +1,6 @@
+﻿Raingage.from\_swmm
+===================
+
+.. currentmodule:: storms
+
+.. automethod:: Raingage.from_swmm

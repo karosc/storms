@@ -1,0 +1,6 @@
+﻿Raingage.from\_ff
+=================
+
+.. currentmodule:: storms
+
+.. automethod:: Raingage.from_ff

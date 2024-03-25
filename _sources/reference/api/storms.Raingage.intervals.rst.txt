@@ -1,0 +1,6 @@
+﻿Raingage.intervals
+==================
+
+.. currentmodule:: storms
+
+.. autoproperty:: Raingage.intervals

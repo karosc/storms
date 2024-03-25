@@ -1,0 +1,6 @@
+﻿ASOS.get\_meta
+==============
+
+.. currentmodule:: storms.precip.datasets
+
+.. automethod:: ASOS.get_meta

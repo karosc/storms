@@ -1,0 +1,6 @@
+﻿NOAAtides.request\_dataframe
+============================
+
+.. currentmodule:: storms.tide.datasets
+
+.. automethod:: NOAAtides.request_dataframe

@@ -1,0 +1,6 @@
+﻿Raingage.freq
+=============
+
+.. currentmodule:: storms
+
+.. autoproperty:: Raingage.freq

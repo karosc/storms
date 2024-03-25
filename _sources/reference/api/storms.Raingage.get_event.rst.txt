@@ -1,0 +1,6 @@
+﻿Raingage.get\_event
+===================
+
+.. currentmodule:: storms
+
+.. automethod:: Raingage.get_event

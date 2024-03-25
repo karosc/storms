@@ -1,0 +1,6 @@
+﻿NOAAtides.map
+=============
+
+.. currentmodule:: storms.tide.datasets
+
+.. automethod:: NOAAtides.map
