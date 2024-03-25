@@ -479,7 +479,7 @@ class ASOS(_DataSource):
         # drop zeros and NP values
         no_precip = (df.ptype == "NP") & (df.precip > 0)
         precip = (df.ptype != "NP") & (df.precip > 0)
-        logger.info(f'Dropping {df.loc[no_precip,'precip'].sum()} inches of NP values')
+        logger.info(f"Dropping {df.loc[no_precip,'precip'].sum()} inches of NP values")
         df = df.drop(df.loc[~precip].index)
 
         if self.utc_offset is None:
